@@ -1,0 +1,187 @@
+---
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: "Simple Survey API"
+basePath: "/simpleSurvey"
+schemes:
+- "https"
+consumes:
+- "application/json"
+produces:
+- "application/json"
+paths:
+  /create:
+    post:
+      tags:
+      - "create"
+      summary: "Create new survey"
+      operationId: "createSurvey"
+      parameters:
+      - in: "body"
+        name: "survey"
+        description: "an Object that contains the name of the survery, and a list\
+          \ of survey questions"
+        required: true
+        schema:
+          $ref: "#/definitions/Survey"
+      responses:
+        201:
+          description: "successfully created survey"
+        500:
+          description: "unexpected error"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "Create"
+  /take/{surveyName}:
+    get:
+      tags:
+      - "take"
+      summary: "Gets all the questions associated with survey name"
+      operationId: "takeSurvey"
+      parameters:
+      - name: "surveyName"
+        in: "path"
+        description: "the name of the survey to be taken"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successfully returned survey with questions"
+          schema:
+            $ref: "#/definitions/Survey"
+        404:
+          description: "could not find survey with surveyName specified"
+        500:
+          description: "unexpected error"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "Take"
+  /submit/{surveyName}:
+    post:
+      tags:
+      - "submit"
+      summary: "adds a list of answers to survey"
+      operationId: "submitAnswers"
+      parameters:
+      - name: "surveyName"
+        in: "path"
+        description: "the name of the survey these answers correspond to"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "answers"
+        description: "a list of 1's and 0's that represent Y/N answers to each question"
+        required: true
+        schema:
+          type: "array"
+          items:
+            type: "integer"
+      responses:
+        201:
+          description: "successfully created new list of answers"
+        404:
+          description: "survey not found"
+        500:
+          description: "unexpected error"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "Submit"
+  /results:
+    get:
+      tags:
+      - "results"
+      summary: "gets a list of all surveys and all corresponding answers"
+      operationId: "getAllResults"
+      parameters: []
+      responses:
+        200:
+          description: "an array of all surveys with questions and answers"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Survey"
+        500:
+          description: "unexpected error"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "Results"
+  /results/{surveyName}:
+    get:
+      tags:
+      - "results"
+      summary: "gets a list of all the results from a particular survey"
+      operationId: "getResults"
+      parameters:
+      - name: "surveyName"
+        in: "path"
+        description: "the name of the survey"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "returns a survey object that contains all answers for each\
+            \ question"
+          schema:
+            $ref: "#/definitions/Survey"
+        404:
+          description: "survey not found"
+        500:
+          description: "unexpected error"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "Results"
+definitions:
+  Question:
+    required:
+    - "id"
+    - "text"
+    properties:
+      text:
+        type: "string"
+      id:
+        type: "integer"
+      answers:
+        type: "array"
+        items:
+          type: "integer"
+    example:
+      answers:
+      - 6
+      - 6
+      text: "text"
+      id: 0
+  Survey:
+    required:
+    - "name"
+    - "questions"
+    properties:
+      name:
+        type: "string"
+      questions:
+        type: "array"
+        items:
+          $ref: "#/definitions/Question"
+    example:
+      name: "name"
+      questions:
+      - answers:
+        - 6
+        - 6
+        text: "text"
+        id: 0
+      - answers:
+        - 6
+        - 6
+        text: "text"
+        id: 0
+  Error:
+    required:
+    - "code"
+    - "message"
+    properties:
+      code:
+        type: "integer"
+        format: "int32"
+      message:
+        type: "string"
