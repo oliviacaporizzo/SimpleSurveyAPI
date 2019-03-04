@@ -28,6 +28,8 @@ paths:
       responses:
         201:
           description: "successfully created survey"
+          schema:
+            $ref: "#/definitions/inline_response_201"
         500:
           description: "unexpected error"
           schema:
@@ -42,16 +44,16 @@ paths:
       parameters:
       - name: "surveyId"
         in: "path"
-        description: "the name of the survey to be taken"
+        description: "the id of the survey to be taken"
         required: true
         type: "string"
       responses:
         200:
           description: "successfully returned survey with questions"
           schema:
-            type: object
+            $ref: "#/definitions/Survey"
         404:
-          description: "could not find survey with surveyName specified"
+          description: "could not find survey with surveyId specified"
         500:
           description: "unexpected error"
           schema:
@@ -66,7 +68,7 @@ paths:
       parameters:
       - name: "surveyId"
         in: "path"
-        description: "the name of the survey to be taken"
+        description: "the id of the survey these answers correspond to"
         required: true
         type: "string"
       - in: "body"
@@ -74,7 +76,7 @@ paths:
         description: "a list of 1's and 0's that represent Y/N answers to each question"
         required: true
         schema:
-          type: "object"
+          $ref: "#/definitions/answers"
       responses:
         201:
           description: "successfully created new list of answers"
@@ -113,7 +115,7 @@ paths:
       parameters:
       - name: "surveyId"
         in: "path"
-        description: "the name of the survey to be taken"
+        description: "the name of the survey"
         required: true
         type: "string"
       responses:
@@ -130,25 +132,6 @@ paths:
             $ref: "#/definitions/Error"
       x-swagger-router-controller: "Results"
 definitions:
-  Question:
-    required:
-    - "id"
-    - "text"
-    properties:
-      text:
-        type: "string"
-      id:
-        type: "integer"
-      answers:
-        type: "array"
-        items:
-          type: "integer"
-    example:
-      answers:
-      - 1
-      - 0
-      text: "text"
-      id: 0
   Survey:
     required:
     - "name"
@@ -158,19 +141,13 @@ definitions:
         type: "string"
       questions:
         type: "object"
+        description: "an object whose keys are the question number and values are\
+          \ an object with properties text (question text) and answers(list of answers\
+          \ to this question)"
+        properties: {}
     example:
       name: "name"
-      questions:
-      - answers:
-        - 1
-        - 0
-        text: "text"
-        id: 0
-      - answers:
-        - 1
-        - 1
-        text: "text"
-        id: 0
+      questions: "{}"
   Error:
     required:
     - "code"
@@ -181,3 +158,15 @@ definitions:
         format: "int32"
       message:
         type: "string"
+  inline_response_201:
+    properties:
+      id:
+        type: "string"
+        description: "the unique id generated for the survey that was created"
+    example:
+      id: "id"
+  answers:
+    type: "object"
+    properties:
+      1:
+        type: "integer"

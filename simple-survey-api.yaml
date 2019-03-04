@@ -31,22 +31,28 @@ paths:
       responses:
         201:
           description: successfully created survey
+          schema:
+            type: object
+            properties:
+              id:
+                type: string
+                description: the unique id generated for the survey that was created
         500:
           description: unexpected error
           schema:
             $ref: "#/definitions/Error"
       x-swagger-router-controller: "Create"
-  /take/{surveyName}:
+  /take/{surveyId}:
     get:
       tags:
         - take
       summary: Gets all the questions associated with survey name
       operationId: takeSurvey
       parameters:
-        - name: surveyName
+        - name: surveyId
           in: path
           required: true
-          description: the name of the survey to be taken
+          description: the id of the survey to be taken
           type: string
       responses:
         200:
@@ -54,32 +60,33 @@ paths:
           schema:
             $ref: "#/definitions/Survey"
         404:
-          description: could not find survey with surveyName specified
+          description: could not find survey with surveyId specified
         500:
           description: unexpected error
           schema:
             $ref: "#/definitions/Error"
       x-swagger-router-controller: "Take"
-  /submit/{surveyName}:
+  /submit/{surveyId}:
     post:
       tags:
         - submit
       summary: adds a list of answers to survey
       operationId: submitAnswers
       parameters:
-        - name: surveyName
+        - name: surveyId
           in: path
           required: true
-          description: the name of the survey these answers correspond to
+          description: the id of the survey these answers correspond to
           type: string
         - name: answers
           in: body
           required: true
           description: "a list of 1's and 0's that represent Y/N answers to each question"
           schema:
-            type: array
-            items:
-              type: integer
+            type: object
+            properties:
+              1:
+                type: integer
       responses:
         201:
           description: successfully created new list of answers
@@ -108,14 +115,14 @@ paths:
           schema:
             $ref: "#/definitions/Error"
       x-swagger-router-controller: "Results"
-  /results/{surveyName}:
+  /results/{surveyId}:
     get:
       tags:
         - "results"
       summary: gets a list of all the results from a particular survey
       operationId: getResults
       parameters:
-        - name: surveyName
+        - name: surveyId
           in: path
           required: true
           description: the name of the survey
@@ -134,20 +141,6 @@ paths:
       x-swagger-router-controller: "Results"
 
 definitions:
-  Question:
-    required:
-      - text
-      - id
-    properties:
-      text:
-        type: string
-      id:
-        type: integer
-      answers:
-        type: array
-        items:
-          type: integer
-
   Survey:
     required:
       - name
@@ -156,9 +149,8 @@ definitions:
       name:
         type: string
       questions:
-        type: array
-        items:
-          $ref: "#/definitions/Question"
+        description: an object whose keys are the question number and values are an object with properties text (question text) and answers(list of answers to this question)
+        type: object
   Error:
     required:
       - code
