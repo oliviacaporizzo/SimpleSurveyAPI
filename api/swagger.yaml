@@ -49,7 +49,9 @@ paths:
         200:
           description: "successfully returned survey with questions"
           schema:
-            $ref: "#/definitions/Survey"
+            type: array
+            items:
+              $ref: '#/definitions/Question'
         404:
           description: "could not find survey with surveyName specified"
         500:

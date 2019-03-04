@@ -1,5 +1,5 @@
 'use strict';
-
+var db = require('../models/db');
 
 /**
  * Gets all the questions associated with survey name
@@ -8,25 +8,20 @@
  * returns Survey
  **/
 exports.takeSurvey = function(surveyName) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = {
-  "name" : "name",
-  "questions" : [ {
-    "answers" : [ 6, 6 ],
-    "text" : "text",
-    "id" : 0
-  }, {
-    "answers" : [ 6, 6 ],
-    "text" : "text",
-    "id" : 0
-  } ]
-};
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
+  return new Promise((resolve, reject) => {
+    db.get(surveyName, (err, val) => {
+      if(!err && val) {
+        let qs = [];
+        for (let q of val.questions) {
+            qs.push({text:q.text, id:q.id});
+        }
+        resolve(qs);
+      }
+      if(err) {
+        reject();
+      }
+      reject('not found');
+    })
   });
 }
 

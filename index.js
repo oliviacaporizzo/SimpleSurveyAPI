@@ -9,7 +9,6 @@ var swaggerTools = require('swagger-tools');
 var jsyaml = require('js-yaml');
 var serverPort = 8080;
 
-// swaggerRouter configuration
 var options = {
   swaggerUi: path.join(__dirname, '/swagger.json'),
   controllers: path.join(__dirname, './controllers'),
@@ -42,3 +41,8 @@ swaggerTools.initializeMiddleware(swaggerDoc, function (middleware) {
   });
 
 });
+
+
+
+// swaggerRouter configuration
+

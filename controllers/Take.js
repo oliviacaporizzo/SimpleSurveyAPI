@@ -10,6 +10,11 @@ module.exports.takeSurvey = function takeSurvey (req, res, next) {
       utils.writeJson(res, response);
     })
     .catch(function (response) {
-      utils.writeJson(res, response);
+      if(response == 'not found') {
+        utils.writeJson(res, '', 404);
+      }
+      else {
+        utils.writeJson(res, response, 500);
+      }
     });
 };
