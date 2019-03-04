@@ -33,14 +33,14 @@ paths:
           schema:
             $ref: "#/definitions/Error"
       x-swagger-router-controller: "Create"
-  /take/{surveyName}:
+  /take/{surveyId}:
     get:
       tags:
       - "take"
       summary: "Gets all the questions associated with survey name"
       operationId: "takeSurvey"
       parameters:
-      - name: "surveyName"
+      - name: "surveyId"
         in: "path"
         description: "the name of the survey to be taken"
         required: true
@@ -49,9 +49,7 @@ paths:
         200:
           description: "successfully returned survey with questions"
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/Question'
+            type: object
         404:
           description: "could not find survey with surveyName specified"
         500:
@@ -59,16 +57,16 @@ paths:
           schema:
             $ref: "#/definitions/Error"
       x-swagger-router-controller: "Take"
-  /submit/{surveyName}:
+  /submit/{surveyId}:
     post:
       tags:
       - "submit"
       summary: "adds a list of answers to survey"
       operationId: "submitAnswers"
       parameters:
-      - name: "surveyName"
+      - name: "surveyId"
         in: "path"
-        description: "the name of the survey these answers correspond to"
+        description: "the name of the survey to be taken"
         required: true
         type: "string"
       - in: "body"
@@ -76,9 +74,7 @@ paths:
         description: "a list of 1's and 0's that represent Y/N answers to each question"
         required: true
         schema:
-          type: "array"
-          items:
-            type: "integer"
+          type: "object"
       responses:
         201:
           description: "successfully created new list of answers"
@@ -108,16 +104,16 @@ paths:
           schema:
             $ref: "#/definitions/Error"
       x-swagger-router-controller: "Results"
-  /results/{surveyName}:
+  /results/{surveyId}:
     get:
       tags:
       - "results"
       summary: "gets a list of all the results from a particular survey"
       operationId: "getResults"
       parameters:
-      - name: "surveyName"
+      - name: "surveyId"
         in: "path"
-        description: "the name of the survey"
+        description: "the name of the survey to be taken"
         required: true
         type: "string"
       responses:
@@ -161,9 +157,7 @@ definitions:
       name:
         type: "string"
       questions:
-        type: "array"
-        items:
-          $ref: "#/definitions/Question"
+        type: "object"
     example:
       name: "name"
       questions:

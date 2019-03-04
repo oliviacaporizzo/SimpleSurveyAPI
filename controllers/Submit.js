@@ -2,12 +2,14 @@
 
 var utils = require('../utils/writer.js');
 var Submit = require('../service/SubmitService');
+var logger = require('../utils/logger')(__filename);
 
 module.exports.submitAnswers = function submitAnswers (req, res, next) {
-  var surveyName = req.swagger.params['surveyName'].value;
+  var surveyId = req.swagger.params['surveyId'].value;
   var answers = req.swagger.params['answers'].value;
-  Submit.submitAnswers(surveyName,answers)
+  Submit.submitAnswers(surveyId,answers)
     .then(function (response) {
+      logger.info("Successfully added answers to survey id: " + surveyId);
       utils.writeJson(res, response);
     })
     .catch(function (response) {

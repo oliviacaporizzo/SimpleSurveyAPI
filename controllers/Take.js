@@ -2,11 +2,13 @@
 
 var utils = require('../utils/writer.js');
 var Take = require('../service/TakeService');
+var logger = require('../utils/logger')(__filename);
 
 module.exports.takeSurvey = function takeSurvey (req, res, next) {
-  var surveyName = req.swagger.params['surveyName'].value;
-  Take.takeSurvey(surveyName)
+  var surveyId = req.swagger.params['surveyId'].value;
+  Take.takeSurvey(surveyId)
     .then(function (response) {
+      logger.info("Succesfully got the questions for survey id " + surveyId);
       utils.writeJson(res, response);
     })
     .catch(function (response) {
