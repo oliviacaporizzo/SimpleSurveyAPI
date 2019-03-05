@@ -8,7 +8,7 @@ Swagger UI Docs can be found at localhost:8080/docs after running.
 ## Routes
 
 I used swagger for clear documentation, but I will also breifly explain the routes here as well.  
-base url: localhost:8080/simpleSurvey  
+**Base url: localhost:8080/simpleSurvey**  
 
 ### /create  
 #### POST:  
@@ -37,4 +37,4 @@ Please look at the swagger UI docs for examples of request and response bodies.
 For this project I wrote the API in NodeJS. I used the Swagger 2.0 framework because it keeps the code organized and creates nice documenation. I used Winston for logging purposes in the console. To persist data I used node-cache a third party library that will persist data while the service is running. node cache is relative light weight and you can store things as objects that do not need a defined schema. Each object is stored with by its unique key (the survey id). Finally I also used the uuid library to generate random unique ids for each survey upon creation.   
 
 ## External Data Persistance  
-For a production ready API I would have chosen a database like MongoDB. MongoDB is easy to use because its documents are not bound to a schema - a collection can hold many documents that can vary in structure, this would be important for my application since I am updateing the question property - sometimes a question just has text and no answers if no one has taken that survey yet, also the number of answers for each question will change depending on how many people take the survey. MongoDB also allows the ability for deep querying inside objects, which would be useful for this scenario since a survey object has many nested components. Fially MongoDB integrates easily with node because of the node driver Mongoose. 
+For a production ready API I would have chosen a database like MongoDB. MongoDB is easy to use because its documents are not bound to a schema - a collection can hold many documents that can vary in structure, this would be important for my application since I am updateing the question property - sometimes a question just has text and no answers if no one has taken that survey yet, also the number of answers for each question will change depending on how many people take the survey. MongoDB also allows the ability for deep querying inside objects, which would be useful for this scenario since a survey object has many nested components. MongoDB also has good performance because while it persists all the data in the hard dist, it also stores most of recent data in RAM, thus for queries it does not have to fetch from the hard disk often. MongoDB is also easily scalable. Finally MongoDB integrates easily with node because of the node driver Mongoose. 
