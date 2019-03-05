@@ -73,7 +73,7 @@ paths:
         type: "string"
       - in: "body"
         name: "answers"
-        description: "a list of 1's and 0's that represent Y/N answers to each question"
+        description: "an object where each key is the question number and value is a 1/0 represnting y/n answer to question"
         required: true
         schema:
           $ref: "#/definitions/answers"
@@ -101,6 +101,8 @@ paths:
             type: "array"
             items:
               $ref: "#/definitions/Survey"
+        404:
+          description: "survey not found"
         500:
           description: "unexpected error"
           schema:
@@ -146,8 +148,12 @@ definitions:
           \ to this question)"
         properties: {}
     example:
-      name: "name"
-      questions: "{}"
+      name: "Survey 1"
+      questions:
+        1:
+          text: "do you like chinese food?"
+        2:
+          text: "Do you like the color blue?"
   Error:
     required:
     - "code"
@@ -170,3 +176,9 @@ definitions:
     properties:
       1:
         type: "integer"
+      2:
+        type: "integer"
+    example:
+      1: 1
+      2: 0
+      3: 1
